@@ -215,4 +215,13 @@ public class RedisCache {
     public Collection<String> keys(final String pattern) {
         return redisTemplate.keys(pattern);
     }
+
+    /**
+     * 更新对象，用的时候先获取一遍
+     */
+    public <T> T updateObject(final String key, Object o) {
+        deleteObject(key);
+        setCacheObject(key, o);
+        return getCacheObject(key);
+    }
 }

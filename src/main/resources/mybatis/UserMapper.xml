@@ -3,9 +3,70 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.graduate.mapper.UserMapper">
+    <delete id="deleteUU">
+        DELETE
+        FROM u_u
+        <where>
+            user_id = #{id} and
+            <foreach collection="ids" item="pid" separator=" or ">
+                friend_id =
+                #{pid}
+            </foreach>
+        </where>
+    </delete>
+
     <select id="getOneUser" resultType="com.example.graduate.pojo.User" parameterType="string">
         select *
         from user
         where account = #{acc}
     </select>
+    <select id="getAllSurvivalUser" resultType="com.example.graduate.pojo.User">
+        select *
+        from user
+        <where>
+            delete_flag = 1
+        </where>
+    </select>
+    <select id="getOneUserByID" resultType="com.example.graduate.pojo.User">
+        select *
+        from user
+        where id = #{id}
+    </select>
+
+    <select id="getFriends" resultType="com.example.graduate.pojo.User">
+        select id, nickname, photo
+        from user AS a
+                 INNER JOIN u_u ON a.id = u_u.user_id
+                 INNER JOIN user AS b ON u_u.friend_id = b.id
+        where a.id = #{id}
+    </select>
+
+    <select id="getUser" resultType="com.example.graduate.pojo.User">
+
+    </select>
+
+    <insert id="installOne" parameterType="com.example.graduate.pojo.User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user (account, password, create_time)
+        VALUES (#{account}, #{password}, #{createTime});
+    </insert>
+
+    <update id="update" parameterType="com.example.graduate.pojo.User">
+        UPDATE user
+        SET nickname = #{nickname},
+            email    = #{email},
+            photo    = #{photo},
+            phone    = #{phone},
+            bothday  = #{bothDay}
+        WHERE id = #{id};
+    </update>
+    <update id="updateFlag">
+        UPDATE user
+        SET delete_flag = !delete_flag
+        WHERE id = #{id};
+    </update>
+    <update id="updatePassword">
+        UPDATE user
+        SET password = #{priorPassword}
+        WHERE id = #{id};
+    </update>
 </mapper>

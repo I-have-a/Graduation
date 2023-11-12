@@ -2,6 +2,7 @@ package com.example.graduate.filter;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.example.graduate.common.BaseContext;
 import com.example.graduate.common.RedisConstant;
 import com.example.graduate.pojo.UserDetailsImlp;
 import com.example.graduate.utils.JwtUtil;
@@ -58,6 +59,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        BaseContext.setCurrentId(Long.valueOf(userid));
         //放行
         filterChain.doFilter(request, response);
     }

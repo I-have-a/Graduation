@@ -1,6 +1,7 @@
 package com.example.graduate.pojo;
 
 import java.util.Date;
+import java.util.List;
 
 public class User {
     private Long id;            //ID
@@ -11,14 +12,16 @@ public class User {
     private String photo;       //头像
     private String phone;       //电话
     private Date bothDay;       //生日
+    private Date createTime;     //注册时间
     private boolean status;     //账户存活状态
+    private List<User> friends; //好友列表，只存储头像、昵称、id
 
     public User(String account, String password) {
         this.account = account;
         this.password = password;
     }
 
-    public User(Long id, String account, String password, String nickname, String email, String photo, String phone, Date bothDay, boolean status) {
+    public User(Long id, String account, String password, String nickname, String email, String photo, String phone, Date bothDay, Date createTime, boolean status, List<User> friends) {
         this.id = id;
         this.account = account;
         this.password = password;
@@ -27,7 +30,9 @@ public class User {
         this.photo = photo;
         this.phone = phone;
         this.bothDay = bothDay;
+        this.createTime = createTime;
         this.status = status;
+        this.friends = friends;
     }
 
     public User() {
@@ -118,5 +123,21 @@ public class User {
                 ", bothDay=" + bothDay +
                 ", status=" + status +
                 '}';
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public List<User> getFriends() {
+        return friends;
+    }
+
+    public void setFriends(List<User> friends) {
+        this.friends = friends;
     }
 }

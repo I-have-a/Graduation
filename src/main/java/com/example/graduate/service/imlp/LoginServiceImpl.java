@@ -1,5 +1,6 @@
 package com.example.graduate.service.imlp;
 
+import com.example.graduate.common.RedisConstant;
 import com.example.graduate.pojo.UserDetailsImlp;
 import com.example.graduate.response.R;
 import com.example.graduate.service.LoginService;
@@ -37,11 +38,11 @@ public class LoginServiceImpl implements LoginService {
         //如果认证通过了，使用userid生成一个jwt jwt存入ResponseResult返回
         UserDetailsImlp loginUser = (UserDetailsImlp) authenticate.getPrincipal();
         String userid = loginUser.getUser().getId().toString();
-        String jwt = JwtUtil.createJWT(userid);
+        String jwt = JwtUtil.createJWT(userid, 60 * 60 * 1000 * 24 * 30L);
         Map<String, String> map1 = new HashMap<>();
         map1.put("token", jwt);
         //把完整的用户信息存入redis  userid作为key
-        redisCache.setCacheObject("login:" + userid, loginUser);
+        redisCache.setCacheObject(RedisConstant.LOGIN_PREFIX + userid, loginUser);
         return new R("登录成功", map1, 200);
     }
 
