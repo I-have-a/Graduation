@@ -10,6 +10,7 @@ import com.example.graduate.utils.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -27,6 +28,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RedisCache redisCache;
 
+    @Transactional
     @Override
     public boolean signup(HashMap<String, Object> map) {
         String account = (String) map.get("account");
@@ -57,6 +59,7 @@ public class UserServiceImpl implements UserService {
         return userMapper.updateFlag(id) == 1;
     }
 
+    @Transactional
     @Override
     public boolean updatePassword(String priorPassword, Long id) {
         if (userMapper.updatePassword(priorPassword, id) == 1) {
@@ -79,8 +82,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findFriend(HashMap<String, Object> map) {
-        List<User> users = userMapper.getUser(map);
-        return null;
+    public List<User> findFriend(String account, String nickname) {
+        return userMapper.getUser(account, nickname);
     }
 }

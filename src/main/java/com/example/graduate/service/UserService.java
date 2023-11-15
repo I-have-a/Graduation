@@ -17,5 +17,5 @@ public interface UserService {
 
     int deleteFriends(Long currentId, List<Integer> ids);
 
-    List<User> findFriend(HashMap<String, Object> map);
+    List<User> findFriend(String text, String text1);
 }

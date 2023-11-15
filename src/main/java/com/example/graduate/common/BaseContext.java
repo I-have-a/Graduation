@@ -6,20 +6,10 @@ package com.example.graduate.common;
 public class BaseContext {
     private static final ThreadLocal<Long> threadLocal = new ThreadLocal<>();
 
-    /**
-     * 获取值
-     *
-     * @return
-     */
     public static Long getCurrentId() {
         return threadLocal.get();
     }
 
-    /**
-     * 设置值
-     *
-     * @param id
-     */
     public static void setCurrentId(Long id) {
         threadLocal.set(id);
     }

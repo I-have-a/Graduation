@@ -1,6 +1,5 @@
 package com.example.graduate.service;
 
-import com.alibaba.fastjson.JSONObject;
 import com.example.graduate.common.RedisConstant;
 import com.example.graduate.mapper.UserMapper;
 import com.example.graduate.pojo.User;
@@ -19,15 +18,9 @@ public class InitializedDataService {
 
     public void initProductInfo() {
         //TODO 后期启动项目，ES刷新更改
-        System.out.println("启动类被运行加载会调用我");
-        JSONObject cacheObject = redisCache.getCacheObject(RedisConstant.SURVIVAL_PREFIX + 1);
-        if (cacheObject == null) {
-            //不存在就创建
-            List<User> users = userMapper.getAllSurvivalUser();
-            users.forEach(user -> {
-                redisCache.setCacheObject(RedisConstant.SURVIVAL_PREFIX + user.getId(), user);
-            });
-        }
+        List<User> users = userMapper.getAllSurvivalUser();
+        for (User user : users)
+            redisCache.setCacheObject(RedisConstant.SURVIVAL_PREFIX + user.getId(), user);
         System.out.println("启动类被运行加载会调用我");
     }
 }

@@ -3,10 +3,12 @@ package com.example.graduate.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.example.graduate.common.BaseContext;
 import com.example.graduate.common.RedisConstant;
+import com.example.graduate.pojo.Message;
 import com.example.graduate.pojo.User;
 import com.example.graduate.response.Code;
 import com.example.graduate.response.R;
 import com.example.graduate.service.LoginService;
+import com.example.graduate.service.MessageService;
 import com.example.graduate.service.UserService;
 import com.example.graduate.utils.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,9 @@ public class UserController {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    MessageService messageService;
 
     @PostMapping("login")
     @ResponseBody
@@ -97,8 +102,8 @@ public class UserController {
         long l = BaseContext.getCurrentId();
         JSONObject cacheObject = redisCache.getCacheObject(RedisConstant.SURVIVAL_PREFIX + l);
         User user = cacheObject.toJavaObject(User.class);
-        if (priorPassword.length() < 8) {
-            return new R("密码需要大于8位", null, Code.FAIL);
+        if (priorPassword.length() < 8 || priorPassword.length() > 16) {
+            return new R("密码需要大于8位小于16位", null, Code.FAIL);
         }
         if (passwordEncoder.matches(priorPassword, user.getPassword())) {
             return new R("新密码不能和原密码相同", null, Code.FAIL);
@@ -125,19 +130,20 @@ public class UserController {
 
     @PostMapping("haiFriend")
     @ResponseBody
-    //TODO 发送好友申请
-    public R addFriend(@RequestBody HashMap<String, Object> map) {
-        Long create = BaseContext.getCurrentId();
-        Integer receiveID = (Integer) map.get("receiveID");
-        String title = (String) map.get("title");
-        return new R("", null, Code.FAIL);
+    public R addFriend(@RequestBody Message message) {
+        message.setCuID(BaseContext.getCurrentId());
+        return messageService.addMessage(message);
     }
 
     @PostMapping("whereFriend")
     @ResponseBody
     public R findFriend(@RequestBody HashMap<String, Object> map) {
-        List<User> users = userService.findFriend(map);
-        return new R("", null, Code.FAIL);
+        String text = (String) map.get("text");
+        List<User> users = userService.findFriend(text, text);
+        if (users.size() == 0) {
+            return new R("查无此人，请重新输入", users, Code.FAIL);
+        }
+        return new R("获取成功", users, Code.SUCCESS);
     }
 
 }

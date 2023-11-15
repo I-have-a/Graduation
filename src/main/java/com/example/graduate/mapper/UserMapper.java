@@ -4,7 +4,6 @@ import com.example.graduate.pojo.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.HashMap;
 import java.util.List;
 
 @Mapper
@@ -28,5 +27,5 @@ public interface UserMapper {
 
     int deleteUU(Long id, List<Integer> ids);
 
-    List<User> getUser(HashMap<String, Object> map);
+    List<User> getUser(String account, String nickname);
 }

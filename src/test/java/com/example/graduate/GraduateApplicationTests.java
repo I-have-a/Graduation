@@ -52,4 +52,10 @@ class GraduateApplicationTests {
 //        System.out.println(user);
     }
 
+    @Test
+    void testPassword() {
+        System.out.println(passwordEncoder.encode("1234"));
+        System.out.println(passwordEncoder.upgradeEncoding("$2a$10$XDmuOefGkHlXgGq3W0mhl.z19ILTK53XcYL2iAQVEIFt2UuZy3Cw6"));
+    }
+
 }

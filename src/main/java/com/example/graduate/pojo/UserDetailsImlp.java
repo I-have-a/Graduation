@@ -1,5 +1,6 @@
 package com.example.graduate.pojo;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -7,22 +8,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class UserDetailsImlp implements UserDetails {
     private User user;
-
-    public UserDetailsImlp(User user) {
-        this.user = user;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

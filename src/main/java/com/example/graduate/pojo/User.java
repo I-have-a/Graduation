@@ -4,24 +4,25 @@ import java.util.Date;
 import java.util.List;
 
 public class User {
-    private Long id;            //ID
-    private String account;     //账号
-    private String password;    //密码
-    private String nickname;    //昵称
-    private String email;       //邮箱
-    private String photo;       //头像
-    private String phone;       //电话
-    private Date bothDay;       //生日
-    private Date createTime;     //注册时间
-    private boolean status;     //账户存活状态
-    private List<User> friends; //好友列表，只存储头像、昵称、id
+    private Long id;                //ID
+    private String account;         //账号
+    private String password;        //密码
+    private String nickname;        //昵称
+    private String email;           //邮箱
+    private String photo;           //头像
+    private String phone;           //电话
+    private Date bothDay;           //生日
+    private Date createTime;        //注册时间
+    private boolean status;         //账户存活状态
+    private List<Element> elements; //事件列表
+    private List<User> friends;     //好友列表，只存储头像、昵称、id
 
     public User(String account, String password) {
         this.account = account;
         this.password = password;
     }
 
-    public User(Long id, String account, String password, String nickname, String email, String photo, String phone, Date bothDay, Date createTime, boolean status, List<User> friends) {
+    public User(Long id, String account, String password, String nickname, String email, String photo, String phone, Date bothDay, Date createTime, boolean status, List<Element> elements, List<User> friends) {
         this.id = id;
         this.account = account;
         this.password = password;
@@ -32,6 +33,7 @@ public class User {
         this.bothDay = bothDay;
         this.createTime = createTime;
         this.status = status;
+        this.elements = elements;
         this.friends = friends;
     }
 
@@ -139,5 +141,13 @@ public class User {
 
     public void setFriends(List<User> friends) {
         this.friends = friends;
+    }
+
+    public List<Element> getElements() {
+        return elements;
+    }
+
+    public void setElements(List<Element> elements) {
+        this.elements = elements;
     }
 }

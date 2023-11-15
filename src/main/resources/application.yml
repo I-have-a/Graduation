@@ -1,5 +1,8 @@
 server:
-  port: 443
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  port: 8080
   servlet:
     session:
       timeout: 259200m

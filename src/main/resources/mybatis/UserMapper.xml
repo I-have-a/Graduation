@@ -34,15 +34,36 @@
     </select>
 
     <select id="getFriends" resultType="com.example.graduate.pojo.User">
-        select id, nickname, photo
+        select b.id, b.nickname, b.photo
         from user AS a
                  INNER JOIN u_u ON a.id = u_u.user_id
                  INNER JOIN user AS b ON u_u.friend_id = b.id
         where a.id = #{id}
     </select>
 
-    <select id="getUser" resultType="com.example.graduate.pojo.User">
-
+    <select id="getUser" resultType="com.example.graduate.pojo.User" parameterType="string">
+        select
+        id,
+        account,
+        nickname,
+        email,
+        photo,
+        phone,
+        bothday,
+        delete_flag,
+        create_time
+        from user
+        <where>
+            <if test="account!=null">
+                account =
+                #{account}
+            </if>
+            <if test="nickname!=null">
+                or nickname =
+                #{nickname}
+            </if>
+            and delete_flag = 1
+        </where>
     </select>
 
     <insert id="installOne" parameterType="com.example.graduate.pojo.User" useGeneratedKeys="true" keyProperty="id">

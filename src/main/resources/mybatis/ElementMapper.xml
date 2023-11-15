@@ -4,4 +4,51 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.graduate.mapper.ElementMapper">
 
+    <resultMap id="baseMap" type="com.example.graduate.pojo.Element">
+        <id column="id" property="id"/>
+        <result column="found_time" property="foundTime"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="predict_start_time" property="pStartTime"/>
+        <result column="predict_end_time" property="pEndTime"/>
+        <result column="accomplish_status" property="accomplishStatus"/>
+    </resultMap>
+    <insert id="addElement">
+        INSERT INTO element(title, description, found_time, start_time, end_time,
+                            predict_start_time, predict_end_time,
+                            complexity, share, u_id)
+        VALUES (#{element.title}, #{element.describe}, #{element.foundTime}, #{element.startTime}, #{element.endTime},
+                #{element.pStartTime}, #{element.pEndTime}, #{element.complexity}, #{element.share}, #{userID});
+    </insert>
+    <update id="updateDelFlag">
+        update element
+        set delete_flag = !delete_flag
+        where id = #{id}
+    </update>
+    <update id="updateElement">
+        UPDATE graduate.element
+        SET title              = #{title},
+            description        = #{describe},
+            start_time         = #{startTime},
+            end_time           = #{endTime},
+            predict_start_time = #{pStartTime},
+            predict_end_time   = #{pEndTime},
+            accomplish_status  = #{accomplishStatus},
+            complexity         = #{complexity},
+            share              = #{share}
+        WHERE id = #{id};
+    </update>
+
+    <select id="getElementListByUserID" resultMap="baseMap">
+        select *
+        from element
+        <where>
+            u_id =
+            #{userID}
+            and
+            delete_flag
+            =
+            1
+        </where>
+    </select>
 </mapper>
