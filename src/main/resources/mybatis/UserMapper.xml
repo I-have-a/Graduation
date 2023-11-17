@@ -3,6 +3,19 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.graduate.mapper.UserMapper">
+
+    <resultMap id="BaseMap" type="com.example.graduate.pojo.User">
+        <id property="id" column="id"/>
+        <result column="bothday" property="bothDay"/>
+        <result column="create_time" property="createTime"/>
+        <result column="delete_flag" property="status"/>
+        <result column="account" property="account"/>
+        <result column="password" property="password"/>
+        <result column="nickname" property="nickname"/>
+        <result column="email" property="email"/>
+        <result column="phone" property="phone"/>
+        <result column="photo" property="photo"/>
+    </resultMap>
     <delete id="deleteUU">
         DELETE
         FROM u_u
@@ -15,25 +28,20 @@
         </where>
     </delete>
 
-    <select id="getOneUser" resultType="com.example.graduate.pojo.User" parameterType="string">
-        select *
-        from user
-        where account = #{acc}
-    </select>
-    <select id="getAllSurvivalUser" resultType="com.example.graduate.pojo.User">
+    <select id="getAllSurvivalUser" resultMap="BaseMap">
         select *
         from user
         <where>
             delete_flag = 1
         </where>
     </select>
-    <select id="getOneUserByID" resultType="com.example.graduate.pojo.User">
+    <select id="getOneUserByID" resultMap="BaseMap">
         select *
         from user
         where id = #{id}
     </select>
 
-    <select id="getFriends" resultType="com.example.graduate.pojo.User">
+    <select id="getFriends" resultMap="BaseMap">
         select b.id, b.nickname, b.photo
         from user AS a
                  INNER JOIN u_u ON a.id = u_u.user_id
@@ -41,7 +49,7 @@
         where a.id = #{id}
     </select>
 
-    <select id="getUser" resultType="com.example.graduate.pojo.User" parameterType="string">
+    <select id="getUserList" resultMap="BaseMap" parameterType="com.example.graduate.pojo.User">
         select
         id,
         account,
@@ -59,8 +67,16 @@
                 #{account}
             </if>
             <if test="nickname!=null">
-                or nickname =
+                nickname =
                 #{nickname}
+            </if>
+            <if test="email!=null">
+                email =
+                #{email}
+            </if>
+            <if test="phone">
+                phone =
+                #{phone}
             </if>
             and delete_flag = 1
         </where>

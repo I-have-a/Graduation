@@ -27,27 +27,6 @@ public class ElementServiceImpl implements ElementService {
     ElementMapper elementMapper;
 
     @Override
-    public R getList() {
-        Long userID = BaseContext.getCurrentId();
-        JSONObject cacheObject = redisCache.getCacheObject(RedisConstant.LOGIN_PREFIX + userID);
-        UserDetailsImlp userDetails = cacheObject.toJavaObject(UserDetailsImlp.class);
-        User user = userDetails.getUser();
-        JSONObject o;
-        if (user.getElements() == null) {
-            List<Element> elementListByUserID = elementMapper.getElementListByUserID(userID);
-            if (elementListByUserID != null) {
-                user.setElements(elementListByUserID);
-                userDetails.setUser(user);
-                o = redisCache.updateObject(RedisConstant.LOGIN_PREFIX + userID, userDetails);
-            } else return new R("事件列表为空", null, Code.SUCCESS);
-        } else {
-            return new R("", user, Code.SUCCESS);
-        }
-        if (o == null) return new R("获取失败", false, Code.FAIL);
-        return new R("获取成功", user, Code.SUCCESS);
-    }
-
-    @Override
     public R deleteElement(Long id) {
         boolean flag = elementMapper.updateDelFlag(id);
         User user = null;
@@ -69,8 +48,20 @@ public class ElementServiceImpl implements ElementService {
     @Override
     public R addElement(Element element) {
         element.setFoundTime(new Date());
-        if (elementMapper.addElement(element, BaseContext.getCurrentId()) == 1)
-            return new R("新建完成", true, Code.SUCCESS);
+        Long userid = BaseContext.getCurrentId();
+        User user;
+        Integer elementID = elementMapper.addElement(element, userid);
+        if (elementID > 0) {
+            if (elementMapper.addUE(userid, elementID) >= 0) {
+                JSONObject cacheObject = redisCache.getCacheObject(RedisConstant.LOGIN_PREFIX + userid);
+                UserDetailsImlp userDetails = cacheObject.toJavaObject(UserDetailsImlp.class);
+                user = userDetails.getUser();
+                user.setElements(elementMapper.getElementListByUserID(userid));
+                userDetails.setUser(user);
+                JSONObject o = redisCache.updateObject(RedisConstant.LOGIN_PREFIX + userid, userDetails);
+                return new R("新建完成", true, Code.SUCCESS);
+            }
+        }
         return new R("新建失败", false, Code.FAIL);
     }
 
@@ -78,15 +69,12 @@ public class ElementServiceImpl implements ElementService {
     public R changeElement(Element element) {
         boolean b = true;
         String msg = "";
-        if (element.isDeleteFlag()) {
+        if (element.isDeleteFlag())
             return new R("事件已删除", null, Code.FAIL);
-        }
-        if (element.getTitle().trim().length() <= 0) {
+        if (element.getTitle() != null && element.getTitle().trim().length() <= 0)
             return new R("标题不能为空", null, Code.FAIL);
-        }
-        if (element.getTitle().trim().length() >= 50) {
+        if (element.getTitle() != null && element.getTitle().trim().length() >= 50)
             return new R("标题长度不能大于50", null, Code.FAIL);
-        }
         if (element.getComplexity() != null) {
             if (element.getComplexity() > 2 && element.getComplexity() < 0) {
                 b = false;
@@ -114,5 +102,14 @@ public class ElementServiceImpl implements ElementService {
         if (!b) return new R(msg, false, Code.FAIL);
         if (elementMapper.updateElement(element) != 1) b = false;
         return !b ? new R(msg, false, Code.FAIL) : new R("修改成功", true, Code.SUCCESS);
+    }
+
+    @Override
+    public R getNowElement(Date date) {
+        Element element = new Element();
+        element.setPStartTime(date);
+        element.setUid(BaseContext.getCurrentId());
+        List<Element> elements = elementMapper.getElements(element);
+        return elements != null ? new R("获取成功", elements, Code.SUCCESS) : new R("获取失败", null, Code.FAIL);
     }
 }

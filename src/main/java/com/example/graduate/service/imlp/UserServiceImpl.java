@@ -35,7 +35,9 @@ public class UserServiceImpl implements UserService {
         String password = (String) map.get("password");
         if ("".equals(account) || "".equals(password)) return false;
         else if (account.length() < 5 || password.length() < 8) return false;
-        if (userMapper.getOneUser(account) != null) return false;
+        User p = new User();
+        p.setAccount(account);
+        if (userMapper.getUserList(p) != null) return false;
         password = passwordEncoder.encode(password);
         User user = new User();
         user.setCreateTime(new Date());
@@ -83,6 +85,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> findFriend(String account, String nickname) {
-        return userMapper.getUser(account, nickname);
+        User user = new User();
+        user.setAccount(account);
+        user.setNickname(nickname);
+        return userMapper.getUserList(user);
     }
 }

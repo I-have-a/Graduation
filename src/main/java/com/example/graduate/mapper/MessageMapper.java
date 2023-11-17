@@ -10,4 +10,8 @@ public interface MessageMapper {
     int addMessage(Message message);
 
     List<Message> getMessageList(Message message);
+
+    Integer deleteMessage(Message message);
+
+    Integer updateMessage(Message message);
 }

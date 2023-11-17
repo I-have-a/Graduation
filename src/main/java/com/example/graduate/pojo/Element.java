@@ -30,5 +30,6 @@ public class Element {
     private Integer accomplishStatus;   //完成状态
     private Integer complexity;         //难度
     private boolean share;              //多人项目？
+    private Long uid;                   //创建人id
     private List<SubElement> subElements;//子项目集
 }

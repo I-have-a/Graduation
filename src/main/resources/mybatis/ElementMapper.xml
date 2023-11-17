@@ -13,12 +13,16 @@
         <result column="predict_end_time" property="pEndTime"/>
         <result column="accomplish_status" property="accomplishStatus"/>
     </resultMap>
-    <insert id="addElement">
+    <insert id="addElement" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO element(title, description, found_time, start_time, end_time,
                             predict_start_time, predict_end_time,
                             complexity, share, u_id)
         VALUES (#{element.title}, #{element.describe}, #{element.foundTime}, #{element.startTime}, #{element.endTime},
                 #{element.pStartTime}, #{element.pEndTime}, #{element.complexity}, #{element.share}, #{userID});
+    </insert>
+    <insert id="addUE">
+        insert into u_e(uid, eid)
+        values (#{uid}, #{eid})
     </insert>
     <update id="updateDelFlag">
         update element
@@ -26,7 +30,7 @@
         where id = #{id}
     </update>
     <update id="updateElement">
-        UPDATE graduate.element
+        UPDATE element
         SET title              = #{title},
             description        = #{describe},
             start_time         = #{startTime},
@@ -38,6 +42,12 @@
             share              = #{share}
         WHERE id = #{id};
     </update>
+    <delete id="deleteUE">
+        delete
+        from u_e
+        where uid = #{uid}
+          and eid = #{eid};
+    </delete>
 
     <select id="getElementListByUserID" resultMap="baseMap">
         select *
@@ -50,5 +60,63 @@
             =
             1
         </where>
+    </select>
+    <select id="getElements" resultMap="baseMap">
+        select
+        id,
+        title,
+        description,
+        found_time,
+        start_time,
+        end_time,
+        predict_start_time,
+        predict_end_time,
+        delete_flag,
+        accomplish_status,
+        complexity,
+        share,
+        u_id
+        from element
+        <where>
+            <if test="title!=null">
+                title =
+                #{title}
+            </if>
+            <if test="describe!=null">
+                and description =
+                #{describe}
+            </if>
+            <if test="pStartTime!=null">
+                and
+                (DATEDIFF(predict_start_time, DATE_ADD(#{pStartTime}, INTERVAL 1 DAY)) > 0 and
+                    DATEDIFF(#{pStartTime}, predict_start_time) > 0)
+            </if>
+            <if test="deleteFlag != null">
+                and delete_flag =
+                #{deleteFlag}
+            </if>
+            <if test="accomplishStatus!=null">
+                and accomplish_status =
+                #{accomplishStatus}
+            </if>
+            <if test="complexity!=null">
+                and complexity =
+                #{complexity}
+            </if>
+            <if test="uid!=null">
+                and u_id =
+                #{uid}
+            </if>
+            <if test="share!=null">
+                and share =
+                #{share}
+            </if>
+        </where>
+    </select>
+    <select id="selectUE" resultType="java.util.HashMap">
+        select *
+        from u_e
+        where eid = #{eid}
+          and uid = #{uid}
     </select>
 </mapper>

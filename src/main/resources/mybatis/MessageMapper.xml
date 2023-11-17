@@ -4,12 +4,26 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.graduate.mapper.MessageMapper">
     <insert id="addMessage" parameterType="com.example.graduate.pojo.Message">
-        INSERT INTO friends(message, cu_id, ru_id)
+        INSERT INTO message(message, cu_id, ru_id)
         VALUES (#{message}, #{cuID}, #{ruID});
     </insert>
+    <update id="updateMessage">
+        update message
+        set status  = #{status},
+            message = #{message}
+        where ru_id = #{ruID}
+          and cu_id = #{cuID};
+    </update>
+    <delete id="deleteMessage">
+        delete
+        from message
+        where cu_id = #{cuID}
+          and ru_id = #{ruID}
+    </delete>
+
     <select id="getMessageList" resultType="com.example.graduate.pojo.Message">
         select *
-        from friends
+        from message
         <where>
             <if test="cuID!=null">
                 cu_id =
@@ -22,6 +36,9 @@
             <if test="status != null">
                 and status =
                 #{status}
+                <if test="status == 0">
+                    or status = 1
+                </if>
             </if>
         </where>
     </select>

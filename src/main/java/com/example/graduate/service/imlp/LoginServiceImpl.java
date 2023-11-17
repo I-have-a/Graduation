@@ -1,6 +1,8 @@
 package com.example.graduate.service.imlp;
 
+import com.alibaba.fastjson.JSON;
 import com.example.graduate.common.RedisConstant;
+import com.example.graduate.pojo.User;
 import com.example.graduate.pojo.UserDetailsImlp;
 import com.example.graduate.response.R;
 import com.example.graduate.service.LoginService;
@@ -32,15 +34,15 @@ public class LoginServiceImpl implements LoginService {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(map.get("account"), map.get("password"));
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
         //如果认证没通过，给出对应的提示
-        if (Objects.isNull(authenticate)) {
-            throw new RuntimeException("登录失败");
-        }
+        if (Objects.isNull(authenticate)) throw new RuntimeException("登录失败");
         //如果认证通过了，使用userid生成一个jwt jwt存入ResponseResult返回
         UserDetailsImlp loginUser = (UserDetailsImlp) authenticate.getPrincipal();
-        String userid = loginUser.getUser().getId().toString();
+        User user = loginUser.getUser();
+        String userid = user.getId().toString();
         String jwt = JwtUtil.createJWT(userid, 60 * 60 * 1000 * 24 * 30L);
         Map<String, String> map1 = new HashMap<>();
         map1.put("token", jwt);
+        map1.put("user", JSON.toJSONString(user));
         //把完整的用户信息存入redis  userid作为key
         redisCache.setCacheObject(RedisConstant.LOGIN_PREFIX + userid, loginUser);
         return new R("登录成功", map1, 200);

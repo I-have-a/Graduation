@@ -132,6 +132,7 @@ public class UserController {
     @ResponseBody
     public R addFriend(@RequestBody Message message) {
         message.setCuID(BaseContext.getCurrentId());
+        message.setStatus(0);
         return messageService.addMessage(message);
     }
 
