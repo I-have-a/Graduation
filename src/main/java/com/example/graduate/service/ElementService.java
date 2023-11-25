@@ -3,7 +3,8 @@ package com.example.graduate.service;
 import com.example.graduate.pojo.Element;
 import com.example.graduate.response.R;
 
-import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 public interface ElementService {
     R deleteElement(Long id);
@@ -12,5 +13,5 @@ public interface ElementService {
 
     R changeElement(Element element);
 
-    R getNowElement(Date date);
+    List<Element> getNowElement(HashMap<String, Object> element);
 }

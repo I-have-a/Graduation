@@ -11,7 +11,7 @@ import java.util.List;
 public interface ElementMapper {
     List<Element> getElementListByUserID(Long userID);
 
-    List<Element> getElements(Element element);
+    List<Element> getElements(HashMap<String, Object> element);
 
     boolean updateDelFlag(Long id);
 
@@ -30,5 +30,5 @@ public interface ElementMapper {
 
     Integer deleteUE(@Param("uid") Long currentId, @Param("eid") Integer elementID);
 
-    HashMap selectUE(@Param("uid") Long currentId, @Param("eid") Integer elementID);
+    HashMap selectUE(HashMap<String, Long> map);
 }

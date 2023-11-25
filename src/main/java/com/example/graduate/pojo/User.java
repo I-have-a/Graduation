@@ -14,7 +14,6 @@ public class User {
     private Date bothDay;           //生日
     private Date createTime;        //注册时间
     private boolean status;         //账户存活状态
-    private List<Element> elements; //事件列表
     private List<User> friends;     //好友列表，只存储头像、昵称、id
 
     public User(String account, String password) {
@@ -22,7 +21,7 @@ public class User {
         this.password = password;
     }
 
-    public User(Long id, String account, String password, String nickname, String email, String photo, String phone, Date bothDay, Date createTime, boolean status, List<Element> elements, List<User> friends) {
+    public User(Long id, String account, String password, String nickname, String email, String photo, String phone, Date bothDay, Date createTime, boolean status, List<User> friends) {
         this.id = id;
         this.account = account;
         this.password = password;
@@ -33,7 +32,6 @@ public class User {
         this.bothDay = bothDay;
         this.createTime = createTime;
         this.status = status;
-        this.elements = elements;
         this.friends = friends;
     }
 
@@ -112,20 +110,6 @@ public class User {
         this.bothDay = bothDay;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", account='" + account + '\'' +
-                ", password='" + password + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", email='" + email + '\'' +
-                ", photo='" + photo + '\'' +
-                ", phone='" + phone + '\'' +
-                ", bothDay=" + bothDay +
-                ", status=" + status +
-                '}';
-    }
 
     public Date getCreateTime() {
         return createTime;
@@ -143,11 +127,18 @@ public class User {
         this.friends = friends;
     }
 
-    public List<Element> getElements() {
-        return elements;
-    }
-
-    public void setElements(List<Element> elements) {
-        this.elements = elements;
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", account='" + account + '\'' +
+                ", password='" + password + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", email='" + email + '\'' +
+                ", photo='" + photo + '\'' +
+                ", phone='" + phone + '\'' +
+                ", bothDay=" + bothDay +
+                ", status=" + status +
+                '}';
     }
 }

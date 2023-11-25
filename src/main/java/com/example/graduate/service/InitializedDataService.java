@@ -18,7 +18,7 @@ public class InitializedDataService {
 
     public void initProductInfo() {
         //TODO 后期启动项目，ES刷新更改
-        List<User> users = userMapper.getAllSurvivalUser();
+        List<User> users = userMapper.getSurvivalUserList(null);
         for (User user : users)
             redisCache.setCacheObject(RedisConstant.SURVIVAL_PREFIX + user.getId(), user);
         System.out.println("启动类被运行加载会调用我");

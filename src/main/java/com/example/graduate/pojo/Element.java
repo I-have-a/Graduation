@@ -31,5 +31,6 @@ public class Element {
     private Integer complexity;         //难度
     private boolean share;              //多人项目？
     private Long uid;                   //创建人id
+    private List<User> users;           //共同用户列表
     private List<SubElement> subElements;//子项目集
 }

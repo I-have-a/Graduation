@@ -1,20 +1,20 @@
 package com.example.graduate.service.imlp;
 
-import com.alibaba.fastjson.JSONObject;
 import com.example.graduate.common.BaseContext;
-import com.example.graduate.common.RedisConstant;
 import com.example.graduate.mapper.ElementMapper;
+import com.example.graduate.mapper.SubElementMapper;
+import com.example.graduate.mapper.UserMapper;
 import com.example.graduate.pojo.Element;
-import com.example.graduate.pojo.User;
-import com.example.graduate.pojo.UserDetailsImlp;
 import com.example.graduate.response.Code;
 import com.example.graduate.response.R;
 import com.example.graduate.service.ElementService;
 import com.example.graduate.utils.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -26,42 +26,54 @@ public class ElementServiceImpl implements ElementService {
     @Autowired
     ElementMapper elementMapper;
 
+    @Autowired
+    SubElementMapper subElementMapper;
+
+    @Autowired
+    UserMapper userMapper;
+
     @Override
     public R deleteElement(Long id) {
         boolean flag = elementMapper.updateDelFlag(id);
-        User user = null;
-        if (flag) {
-            Long userID = BaseContext.getCurrentId();
-            JSONObject cacheObject = redisCache.getCacheObject(RedisConstant.LOGIN_PREFIX + userID);
-            UserDetailsImlp userDetails = cacheObject.toJavaObject(UserDetailsImlp.class);
-            user = userDetails.getUser();
-            user.setElements(elementMapper.getElementListByUserID(userID));
-            userDetails.setUser(user);
-            JSONObject o = redisCache.updateObject(RedisConstant.LOGIN_PREFIX + userID, userDetails);
-            if (o == null) {
-                return new R("哦豁", false, Code.FAIL);
-            }
-        }
-        return new R("删除成功", user, Code.SUCCESS);
+        return flag ? new R("删除成功", true, Code.SUCCESS) : new R("删除失败", false, Code.FAIL);
     }
 
+    @Transactional
     @Override
     public R addElement(Element element) {
         element.setFoundTime(new Date());
-        Long userid = BaseContext.getCurrentId();
-        User user;
-        Integer elementID = elementMapper.addElement(element, userid);
-        if (elementID > 0) {
-            if (elementMapper.addUE(userid, elementID) >= 0) {
-                JSONObject cacheObject = redisCache.getCacheObject(RedisConstant.LOGIN_PREFIX + userid);
-                UserDetailsImlp userDetails = cacheObject.toJavaObject(UserDetailsImlp.class);
-                user = userDetails.getUser();
-                user.setElements(elementMapper.getElementListByUserID(userid));
-                userDetails.setUser(user);
-                JSONObject o = redisCache.updateObject(RedisConstant.LOGIN_PREFIX + userid, userDetails);
-                return new R("新建完成", true, Code.SUCCESS);
+        boolean b = true;
+        String msg = "";
+        if (element.getTitle() != null) {
+            if (element.getTitle().trim().length() <= 0) {
+                b = false;
+                msg = "标题不能为空";
+            }
+        } else b = false;
+        if (element.getTitle() != null) {
+            if (element.getTitle().trim().length() >= 50) {
+                b = false;
+                msg = "标题长度不能大于50";
+            }
+        } else b = false;
+        if (element.getComplexity() != null) {
+            if (element.getComplexity() > 2 || element.getComplexity() < 0) {
+                b = false;
+                msg = "复杂度不在范围";
+            }
+        } else b = false;
+        if (element.getPStartTime() != null && element.getPEndTime() != null) {
+            if (element.getPStartTime().compareTo(element.getPEndTime()) > 0) {
+                b = false;
+                msg = "计划开始时间不能大于结束时间";
             }
         }
+        if (!b) return new R(msg, false, Code.FAIL);
+        Long userid = BaseContext.getCurrentId();
+        Integer elementID = elementMapper.addElement(element, userid);
+        if (elementID > 0)
+            if (elementMapper.addUE(userid, elementID) > 0)
+                return new R("新建完成", true, Code.SUCCESS);
         return new R("新建失败", false, Code.FAIL);
     }
 
@@ -76,7 +88,7 @@ public class ElementServiceImpl implements ElementService {
         if (element.getTitle() != null && element.getTitle().trim().length() >= 50)
             return new R("标题长度不能大于50", null, Code.FAIL);
         if (element.getComplexity() != null) {
-            if (element.getComplexity() > 2 && element.getComplexity() < 0) {
+            if (element.getComplexity() > 2 || element.getComplexity() < 0) {
                 b = false;
                 msg = "复杂度不在范围";
             }
@@ -105,11 +117,12 @@ public class ElementServiceImpl implements ElementService {
     }
 
     @Override
-    public R getNowElement(Date date) {
-        Element element = new Element();
-        element.setPStartTime(date);
-        element.setUid(BaseContext.getCurrentId());
+    public List<Element> getNowElement(HashMap<String, Object> element) {
         List<Element> elements = elementMapper.getElements(element);
-        return elements != null ? new R("获取成功", elements, Code.SUCCESS) : new R("获取失败", null, Code.FAIL);
+        for (Element element1 : elements) {
+            element1.setSubElements(subElementMapper.getSubElementList(element1.getId()));
+            element1.setUsers(userMapper.getUserByElement(element1));
+        }
+        return elements;
     }
 }

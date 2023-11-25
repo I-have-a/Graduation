@@ -1,6 +1,5 @@
 package com.example.graduate;
 
-import com.example.graduate.service.LoginService;
 import com.example.graduate.utils.RedisCache;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +13,6 @@ import java.text.SimpleDateFormat;
 
 @SpringBootTest
 class GraduateApplicationTests {
-
-    @Autowired
-    LoginService loginService;
 
     @Resource
     StringRedisTemplate stringRedisTemplate;
@@ -43,7 +39,7 @@ class GraduateApplicationTests {
     @Test
     void testPassword() {
         System.out.println(passwordEncoder.encode("1234"));
-        System.out.println(passwordEncoder.upgradeEncoding("$2a$10$XDmuOefGkHlXgGq3W0mhl.z19ILTK53XcYL2iAQVEIFt2UuZy3Cw6"));
+        System.out.println(passwordEncoder.matches("1234", "$2a$10$wc.YyuuPFtAwYQOTcs4J6O1GWGUqAWduT4cmEBufMs9zBPUrKv/8W"));
     }
 
 }

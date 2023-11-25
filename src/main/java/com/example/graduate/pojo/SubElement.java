@@ -22,7 +22,7 @@ public class SubElement {
     private boolean deleteFlag;         //删除标志位
     private Integer accomplishStatus;   //完成状态
     private Integer complexity;         //复杂度
-    private User auID;                  //完成者id
-    private User cuID;                  //创建者id
+    private Long auID;                  //完成者id
+    private Long cuID;                  //创建者id
     private List<Node> nodes;           //节点集
 }

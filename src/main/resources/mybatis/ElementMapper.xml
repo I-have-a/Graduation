@@ -6,6 +6,8 @@
 
     <resultMap id="baseMap" type="com.example.graduate.pojo.Element">
         <id column="id" property="id"/>
+        <result column="u_id" property="uid"/>
+        <result column="description" property="describe"/>
         <result column="found_time" property="foundTime"/>
         <result column="start_time" property="startTime"/>
         <result column="end_time" property="endTime"/>
@@ -61,7 +63,7 @@
             1
         </where>
     </select>
-    <select id="getElements" resultMap="baseMap">
+    <select id="getElements" resultMap="baseMap" parameterType="hashmap">
         select
         id,
         title,
@@ -88,8 +90,8 @@
             </if>
             <if test="pStartTime!=null">
                 and
-                (DATEDIFF(predict_start_time, DATE_ADD(#{pStartTime}, INTERVAL 1 DAY)) > 0 and
-                    DATEDIFF(#{pStartTime}, predict_start_time) > 0)
+                (DATEDIFF(DATE_ADD(#{pStartTime}, INTERVAL 1 DAY),predict_start_time) > 0 and
+                    DATEDIFF(predict_start_time, #{pStartTime}) >= 0)
             </if>
             <if test="deleteFlag != null">
                 and delete_flag =
@@ -103,20 +105,28 @@
                 and complexity =
                 #{complexity}
             </if>
-            <if test="uid!=null">
-                and u_id =
-                #{uid}
-            </if>
             <if test="share!=null">
                 and share =
                 #{share}
             </if>
+            <if test="uid!=null">
+                and u_id =
+                #{uid}
+            </if>
         </where>
     </select>
-    <select id="selectUE" resultType="java.util.HashMap">
+    <select id="selectUE" resultType="java.util.HashMap" parameterType="hashmap">
         select *
         from u_e
-        where eid = #{eid}
-          and uid = #{uid}
+        <where>
+            <if test="eid!=null">
+                eid =
+                #{eid}
+            </if>
+            <if test="uid!=null">
+                and uid =
+                #{uid}
+            </if>
+        </where>
     </select>
 </mapper>
