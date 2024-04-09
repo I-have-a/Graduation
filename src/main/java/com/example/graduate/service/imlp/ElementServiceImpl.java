@@ -71,9 +71,13 @@ public class ElementServiceImpl implements ElementService {
         if (!b) return new R(msg, false, Code.FAIL);
         Long userid = BaseContext.getCurrentId();
         Integer elementID = elementMapper.addElement(element, userid);
-        if (elementID > 0)
+        if (elementID > 0) {
+            if (element.getSubElements() != null && element.getSubElements().size() > 0) {
+                subElementMapper.addAllSubElement(element.getSubElements(), element.getId());
+            }
             if (elementMapper.addUE(userid, elementID) > 0)
                 return new R("新建完成", true, Code.SUCCESS);
+        }
         return new R("新建失败", false, Code.FAIL);
     }
 

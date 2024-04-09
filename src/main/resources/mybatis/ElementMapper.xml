@@ -15,7 +15,7 @@
         <result column="predict_end_time" property="pEndTime"/>
         <result column="accomplish_status" property="accomplishStatus"/>
     </resultMap>
-    <insert id="addElement" useGeneratedKeys="true" keyProperty="id">
+    <insert id="addElement" useGeneratedKeys="true" keyProperty="element.id">
         INSERT INTO element(title, description, found_time, start_time, end_time,
                             predict_start_time, predict_end_time,
                             complexity, share, u_id)
@@ -88,10 +88,10 @@
                 and description =
                 #{describe}
             </if>
-            <if test="pStartTime!=null">
+            <if test="date!=null">
                 and
-                (DATEDIFF(DATE_ADD(#{pStartTime}, INTERVAL 1 DAY),predict_start_time) > 0 and
-                    DATEDIFF(predict_start_time, #{pStartTime}) >= 0)
+                (DATEDIFF(DATE_ADD(#{date}, INTERVAL 1 DAY),predict_start_time) > 0 and
+                    DATEDIFF(predict_start_time, #{date}) >= 0)
             </if>
             <if test="deleteFlag != null">
                 and delete_flag =

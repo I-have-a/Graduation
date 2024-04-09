@@ -18,6 +18,16 @@
         <result property="auID" column="au_id"/>
         <result property="cuID" column="cu_id"/>
     </resultMap>
+    <insert id="addAllSubElement">
+        <foreach collection="subElements" item="subElement" separator=";">
+            insert into sub_element (title, e_id, description, found_time, predict_start_time, predict_end_time,
+                                     complexity, cu_id)
+            values (#{subElement.title}, #{id}, #{subElement.description}, #{subElement.foundDate},
+                    #{subElement.pStartTime},
+                    #{subElement.pEndTime},
+                    #{subElement.complexity}, #{subElement.cuID});
+        </foreach>
+    </insert>
 
     <select id="getSubElementList" resultType="com.example.graduate.pojo.SubElement">
         SELECT id,

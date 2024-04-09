@@ -9,4 +9,6 @@ import java.util.List;
 public interface SubElementMapper {
 
     List<SubElement> getSubElementList(Long eID);
+
+    boolean addAllSubElement(List<SubElement> subElements, Long id);
 }

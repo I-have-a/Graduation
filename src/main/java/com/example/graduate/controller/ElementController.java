@@ -24,7 +24,7 @@ public class ElementController {
     @ResponseBody
     public R come(@DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("pStartTime", date);
+        map.put("date", date);
         map.put("uid", BaseContext.getCurrentId());
         map.put("deleteFlag", true);
         List<Element> nowElement = elementService.getNowElement(map);

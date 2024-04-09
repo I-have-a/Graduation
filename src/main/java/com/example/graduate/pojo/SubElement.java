@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class SubElement {
     private Integer id;                 //id
+    private Long eID;                   //父级事件
     private String title;               //标题
     private String description;         //描述
     private Date foundDate;             //创建时间

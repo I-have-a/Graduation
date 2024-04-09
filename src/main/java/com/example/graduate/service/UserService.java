@@ -3,11 +3,12 @@ package com.example.graduate.service;
 import com.example.graduate.pojo.User;
 import com.example.graduate.response.R;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 
 public interface UserService {
-    R login(HashMap<String, Object> map);
+    R login(HashMap<String, Object> map, HttpServletRequest request);
 
     R logout();
 

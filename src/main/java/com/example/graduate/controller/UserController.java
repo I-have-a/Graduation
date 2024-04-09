@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 
@@ -36,8 +37,8 @@ public class UserController {
 
     @PostMapping("login")
     @ResponseBody
-    public R login(@RequestBody HashMap<String, Object> map) {
-        return userService.login(map);
+    public R login(@RequestBody HashMap<String, Object> map, HttpServletRequest request) {
+        return userService.login(map, request);
     }
 
     @PostMapping("signup")
@@ -108,7 +109,7 @@ public class UserController {
         return new R("删除失败", null, Code.FAIL);
     }
 
-    @PostMapping("haiFriend")
+    @PostMapping("postMessage")
     @ResponseBody
     public R addFriend(@RequestBody Message message) {
         message.setCuID(BaseContext.getCurrentId());
