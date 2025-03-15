@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bi.item.mapper.ElementMapper">
+
+    <resultMap id="baseMap" type="com.bi.item.pojo.Item">
+        <id column="id" property="id"/>
+        <result column="u_id" property="uid"/>
+        <result column="description" property="describe"/>
+        <result column="found_time" property="foundTime"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="predict_start_time" property="pStartTime"/>
+        <result column="predict_end_time" property="pEndTime"/>
+        <result column="accomplish_status" property="accomplishStatus"/>
+    </resultMap>
+    <insert id="addElement" useGeneratedKeys="true" keyProperty="item.id">
+        INSERT INTO item(title, description, found_time, start_time, end_time,
+                            predict_start_time, predict_end_time,
+                            complexity, share, u_id)
+        VALUES (#{item.title}, #{item.describe}, #{item.foundTime}, #{item.startTime}, #{item.endTime},
+                #{item.pStartTime}, #{item.pEndTime}, #{item.complexity}, #{item.share}, #{userID});
+    </insert>
+    <insert id="addUE">
+        insert into u_e(uid, eid)
+        values (#{uid}, #{eid})
+    </insert>
+    <update id="updateDelFlag">
+        update item
+        set delete_flag = !delete_flag
+        where id = #{id}
+    </update>
+    <update id="updateElement">
+        UPDATE item
+        SET title              = #{title},
+            description        = #{describe},
+            start_time         = #{startTime},
+            end_time           = #{endTime},
+            predict_start_time = #{pStartTime},
+            predict_end_time   = #{pEndTime},
+            accomplish_status  = #{accomplishStatus},
+            complexity         = #{complexity},
+            share              = #{share}
+        WHERE id = #{id};
+    </update>
+    <delete id="deleteUE">
+        delete
+        from u_e
+        where uid = #{uid}
+          and eid = #{eid};
+    </delete>
+
+    <select id="getElementListByUserID" resultMap="baseMap">
+        select *
+        from item
+        <where>
+            u_id =
+            #{userID}
+            and
+            delete_flag
+            =
+            1
+        </where>
+    </select>
+    <select id="getElements" resultMap="baseMap" parameterType="hashmap">
+        select
+        id,
+        title,
+        description,
+        found_time,
+        start_time,
+        end_time,
+        predict_start_time,
+        predict_end_time,
+        delete_flag,
+        accomplish_status,
+        complexity,
+        share,
+        u_id
+        from item
+        <where>
+            <if test="title!=null">
+                title =
+                #{title}
+            </if>
+            <if test="describe!=null">
+                and description =
+                #{describe}
+            </if>
+            <if test="date!=null">
+                and
+                (DATEDIFF(DATE_ADD(#{date}, INTERVAL 1 DAY),predict_start_time) > 0 and
+                    DATEDIFF(predict_start_time, #{date}) >= 0)
+            </if>
+            <if test="deleteFlag != null">
+                and delete_flag =
+                #{deleteFlag}
+            </if>
+            <if test="accomplishStatus!=null">
+                and accomplish_status =
+                #{accomplishStatus}
+            </if>
+            <if test="complexity!=null">
+                and complexity =
+                #{complexity}
+            </if>
+            <if test="share!=null">
+                and share =
+                #{share}
+            </if>
+            <if test="uid!=null">
+                and u_id =
+                #{uid}
+            </if>
+        </where>
+    </select>
+    <select id="selectUE" resultType="java.util.HashMap" parameterType="hashmap">
+        select *
+        from u_e
+        <where>
+            <if test="eid!=null">
+                eid =
+                #{eid}
+            </if>
+            <if test="uid!=null">
+                and uid =
+                #{uid}
+            </if>
+        </where>
+    </select>
+</mapper>

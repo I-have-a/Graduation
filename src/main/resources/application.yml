@@ -1,0 +1,52 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+  tomcat:
+    uri-encoding: UTF-8
+    accept-count: 1000
+    threads:
+      max: 800
+      min-spare: 100
+spring:
+  security:
+    user:
+      name: admin
+      password: 123456
+      roles:
+        - ADMIN
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/element?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+    username: root
+    password: 986a188f
+    dbcp2:
+      initialSize: 5
+      minIdle: 10
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      validationQuery: SELECT 1 FROM DUAL
+  profiles:
+    active: druid
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
+  devtools:
+    restart:
+      enabled: false
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      database: 0
+      password: 986a188f
+      timeout: 10s
+      lettuce:
+        pool:
+          min-idle: 0
+          max-idle: 8
+          max-active: 8
+          max-wait: -1ms

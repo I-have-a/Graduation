@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bi.item.mapper.MessageMapper">
+    <insert id="addMessage" parameterType="com.bi.item.pojo.Message">
+        INSERT INTO message(message, cu_id, ru_id)
+        VALUES (#{message}, #{cuID}, #{ruID});
+    </insert>
+    <update id="updateMessage">
+        update message
+        set status  = #{status},
+            message = #{message}
+        where ru_id = #{ruID}
+          and cu_id = #{cuID};
+    </update>
+    <delete id="deleteMessage">
+        delete
+        from message
+        where cu_id = #{cuID}
+          and ru_id = #{ruID}
+    </delete>
+
+    <select id="getMessageList" resultType="com.bi.item.pojo.Message">
+        select *
+        from message
+        <where>
+            <if test="cuID!=null">
+                cu_id =
+                #{cuID}
+            </if>
+            <if test="ruID !=null">
+                and ru_id =
+                #{ruID}
+            </if>
+            <if test="status != null">
+                and status =
+                #{status}
+                <if test="status == 0">
+                    or status = 1
+                </if>
+            </if>
+        </where>
+    </select>
+</mapper>
