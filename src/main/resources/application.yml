@@ -8,6 +8,28 @@ server:
     threads:
       max: 800
       min-spare: 100
+mybatis-plus:
+  global-config:
+    db-config:
+      table-prefix: tb_
+      logic-delete-field: del_flag
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      update-strategy: not_null
+  configuration:
+    default-enum-type-handler: com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler
+    map-underscore-to-camel-case: true
+logging:
+  level:
+    com.bi: debug
+    org.springframework: warn
+token:
+  # 令牌自定义标识
+  header: Authorization
+  # 令牌密钥
+  secret: abcdefghijklmnopqrstuvwxyz
+  # 令牌有效期（默认30分钟）
+  expireTime: 43200
 spring:
   security:
     user:
@@ -39,9 +61,9 @@ spring:
       enabled: false
   data:
     redis:
-      host: localhost
+      host: 192.168.30.100
       port: 6379
-      database: 0
+      database: 1
       password: 986a188f
       timeout: 10s
       lettuce:

@@ -1,11 +1,10 @@
 package com.bi.element.controller;
 
-import com.bi.element.common.BaseContext;
-import com.bi.element.pojo.Item;
-import com.bi.element.response.Code;
+import com.bi.element.domain.po.Item;
 import com.bi.element.response.R;
-import com.bi.element.service.ElementService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.bi.element.service.ItemService;
+import com.bi.element.utils.SecurityUtils;
+import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,38 +14,37 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/element")
-public class ElementController {
+@AllArgsConstructor
+public class ItemController {
 
-    @Autowired
-    ElementService elementService;
+    private final ItemService itemService;
 
     @GetMapping("now")
     @ResponseBody
     public R come(@DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
         HashMap<String, Object> map = new HashMap<>();
         map.put("date", date);
-        map.put("uid", BaseContext.getCurrentId());
+        map.put("uid", SecurityUtils.getUserId());
         map.put("deleteFlag", true);
-        List<Item> nowItem = elementService.getNowElement(map);
-        return nowItem != null ? new R("获取成功", nowItem, Code.SUCCESS) : new R("获取失败", null, Code.FAIL);
+        List<Item> nowItem = itemService.getNowItem(map);
+        return nowItem != null ? R.ok("获取成功", nowItem) : R.error("获取失败");
     }
 
     @GetMapping("weakElement")
     @ResponseBody
     public R bay(Long elementID) {
-        return elementService.deleteElement(elementID);
+        return itemService.deleteItem(elementID);
     }
 
     @PostMapping("add")
     @ResponseBody
     public R add(@RequestBody Item item) {
-        return elementService.addElement(item);
+        return itemService.addItem(item);
     }
 
     @PostMapping("change")
     @ResponseBody
     public R update(@RequestBody Item item) {
-        return elementService.changeElement(item);
+        return itemService.changeItem(item);
     }
-
 }

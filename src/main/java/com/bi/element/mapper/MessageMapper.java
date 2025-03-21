@@ -1,6 +1,6 @@
 package com.bi.element.mapper;
 
-import com.bi.element.pojo.Message;
+import com.bi.element.domain.po.Message;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

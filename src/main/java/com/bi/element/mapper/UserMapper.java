@@ -1,20 +1,19 @@
 package com.bi.element.mapper;
 
-import com.bi.element.pojo.Item;
-import com.bi.element.pojo.User;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.bi.element.domain.po.Item;
+import com.bi.element.domain.po.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 @Mapper
-public interface UserMapper {
+public interface UserMapper extends BaseMapper<User> {
 
     User getOneUserByID(Long id);
 
     boolean installOne(User user);
-
-    Integer update(User user);
 
     /**
      * 没有生日范围查询
@@ -33,7 +32,7 @@ public interface UserMapper {
 
     User getLoginUser(String account);
 
-    List<User> getUserByElement(Item item);
+    List<User> getUserByItem(Item item);
 
     User selectByUsername(String username);
 }

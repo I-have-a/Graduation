@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.bi.item.mapper.ElementMapper">
+<mapper namespace="com.bi.element.mapper.ItemMapper">
 
-    <resultMap id="baseMap" type="com.bi.item.pojo.Item">
+    <resultMap id="baseMap" type="com.bi.element.domain.po.Item">
         <id column="id" property="id"/>
         <result column="u_id" property="uid"/>
         <result column="description" property="describe"/>
@@ -22,12 +22,9 @@
         VALUES (#{item.title}, #{item.describe}, #{item.foundTime}, #{item.startTime}, #{item.endTime},
                 #{item.pStartTime}, #{item.pEndTime}, #{item.complexity}, #{item.share}, #{userID});
     </insert>
-    <insert id="addUE">
-        insert into u_e(uid, eid)
-        values (#{uid}, #{eid})
-    </insert>
+
     <update id="updateDelFlag">
-        update item
+        update tb_item
         set delete_flag = !delete_flag
         where id = #{id}
     </update>

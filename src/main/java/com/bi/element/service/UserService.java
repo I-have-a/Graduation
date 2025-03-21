@@ -1,18 +1,18 @@
 package com.bi.element.service;
 
-import com.bi.element.pojo.User;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.bi.element.domain.po.User;
+import com.bi.element.domain.vo.UserVO;
 import com.bi.element.response.R;
 import jakarta.servlet.http.HttpServletRequest;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public interface UserService {
-    R login(HashMap<String, Object> map, HttpServletRequest request);
+public interface UserService extends IService<User> {
+    Map<String,Object> login(User user, HttpServletRequest request);
 
-    R logout();
-
-    R signup(HashMap<String, Object> map);
+    Boolean signup(UserVO user);
 
     boolean updateInfo(User user);
 
@@ -23,4 +23,8 @@ public interface UserService {
     int deleteFriends(Long currentId, List<Integer> ids);
 
     List<User> findFriend(String text, String text1);
+
+    List<User> findUser(String account, String nickname);
+
+    Integer updateUserProfile(User user);
 }

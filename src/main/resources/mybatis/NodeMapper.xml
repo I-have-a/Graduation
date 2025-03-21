@@ -2,8 +2,8 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.bi.item.mapper.NodeMapper">
-    <resultMap id="baseMap" type="com.bi.item.pojo.Node">
+<mapper namespace="com.bi.element.mapper.NodeMapper">
+    <resultMap id="baseMap" type="com.bi.element.domain.po.Node">
         <id column="id" property="id"/>
         <result property="title" column="title"/>
         <result property="startTime" column="start_time"/>

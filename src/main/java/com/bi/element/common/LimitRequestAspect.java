@@ -25,10 +25,10 @@ public class LimitRequestAspect {
     // 定义切点
     // 让所有有@LimitRequest注解的方法都执行切面方法
     @Pointcut("@annotation(limitRequest)")
-    public void excudeService(LimitRequest limitRequest) {
+    public void excludeService(LimitRequest limitRequest) {
     }
 
-    @Around("excudeService(limitRequest)")
+    @Around(value = "excludeService(limitRequest)", argNames = "pjp,limitRequest")
     public Object doAround(ProceedingJoinPoint pjp, LimitRequest limitRequest) throws Throwable {
 
         // 获得request对象

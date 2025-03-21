@@ -1,4 +1,4 @@
-package com.bi.element.pojo;
+package com.bi.element.domain.po;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -2,6 +2,6 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.bi.item.mapper.StatisticsMapper">
+<mapper namespace="com.bi.element.mapper.StatisticsMapper">
 
 </mapper>

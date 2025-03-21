@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.bi.item.mapper.UserMapper">
+<mapper namespace="com.bi.element.mapper.UserMapper">
 
-    <resultMap id="BaseMap" type="com.bi.item.pojo.User">
+    <resultMap id="BaseMap" type="com.bi.element.domain.po.User">
         <id property="id" column="id"/>
         <result column="bothday" property="bothDay"/>
         <result column="create_time" property="createTime"/>
@@ -30,19 +30,19 @@
 
     <select id="getOneUserByID" resultMap="BaseMap">
         select *
-        from user
+        from tb_user
         where id = #{id}
     </select>
 
     <select id="getFriends" resultMap="BaseMap">
         select b.id, b.nickname, b.photo
-        from user AS a
+        from tb_user AS a
         INNER JOIN u_u ON a.id = u_u.user_id
-        INNER JOIN user AS b ON u_u.friend_id = b.id
+        INNER JOIN tb_user AS b ON u_u.friend_id = b.id
         where a.id = #{id}
     </select>
 
-    <select id="getSurvivalUserList" resultMap="BaseMap" parameterType="com.bi.item.pojo.User">
+    <select id="getSurvivalUserList" resultMap="BaseMap" parameterType="com.bi.element.domain.po.User">
         select
         id,
         account,
@@ -53,7 +53,7 @@
         bothday,
         delete_flag,
         create_time
-        from user
+        from tb_user
         <where>
             <if test="account!=null">
                 account =
@@ -75,8 +75,8 @@
         </where>
     </select>
 
-    <insert id="installOne" parameterType="com.bi.item.pojo.User" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO user (account, password, create_time)
+    <insert id="installOne" parameterType="com.bi.element.domain.po.User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO tb_user (account, password, create_time)
         VALUES (#{account}, #{password}, #{createTime});
     </insert>
     <insert id="addUU">
@@ -88,57 +88,31 @@
 
     <select id="getLoginUser" resultMap="BaseMap">
         select *
-        from user
+        from tb_user
         where account = #{account}
     </select>
-    <select id="getUserByElement" resultType="com.bi.item.pojo.User">
-        SELECT user.id,
+    <select id="getUserByItem" resultType="com.bi.element.domain.po.User">
+        SELECT tb_user.id,
         account,
         photo
         FROM u_e
-        INNER JOIN user ON u_e.uid = user.id
+        INNER JOIN tb_user ON u_e.uid = tb_user.id
         WHERE u_e.eid = #{id}
-        AND user.delete_flag = 1
+        AND tb_user.delete_flag = 1
     </select>
     <select id="selectByUsername" resultMap="BaseMap">
         select *
-        from user
+        from tb_user
         where account = #{username}
     </select>
 
-    <update id="update" parameterType="com.bi.item.pojo.User">
-        UPDATE user
-        <set>
-            <if test="nickname!=null">
-                nickname =
-                #{nickname},
-            </if>
-            <if test="email!=null">
-                email =
-                #{email},
-            </if>
-            <if test="photo!=null">
-                photo =
-                #{photo},
-            </if>
-            <if test="phone!=null">
-                phone =
-                #{phone},
-            </if>
-            <if test="bothDay!=null">
-                bothday =
-                #{bothDay}
-            </if>
-        </set>
-        WHERE id = #{id};
-    </update>
     <update id="updateFlag">
-        UPDATE user
+        UPDATE tb_user
         SET delete_flag = !delete_flag
         WHERE id = #{id};
     </update>
     <update id="updatePassword">
-        UPDATE user
+        UPDATE tb_user
         SET password = #{priorPassword}
         WHERE id = #{id};
     </update>

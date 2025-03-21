@@ -18,9 +18,9 @@ import java.util.UUID;
 public class JwtUtil {
 
     //有效期为
-    public static final Long JWT_TTL = 60 * 60 * 1000L;// 60 * 60 *1000  一个小时
+    public static Long JWT_TTL = 1000 * 60 * 60 * 24 * 7L;
     //设置秘钥明文
-    public static final String JWT_KEY = "bbj";
+    public static String JWT_KEY = "bbj";
 
     public static String getUUID() {
         return UUID.randomUUID().toString().replaceAll("-", "");
