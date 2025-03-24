@@ -1,14 +1,15 @@
-package com.bi.element.domain.status_enum;
+package com.bi.element.domain.statusEnum;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
 @Getter
-public enum UserStatus {
-    NORMAL(0, "正常"),
-    DELETED(1, "已删除"),
-    LOCKED(2, "已锁定"),
+public enum ItemComplexity {
+    //(0=简单,1=中等,2=困难)
+    SIMPLE(0, "简单"),
+    MEDIUM(1, "中等"),
+    DIFFICULTY(2, "困难"),
     ;
 
     @EnumValue
@@ -16,9 +17,8 @@ public enum UserStatus {
     @JsonValue
     private final String message;
 
-    UserStatus(Integer code, String message) {
+    ItemComplexity(Integer code, String message) {
         this.code = code;
         this.message = message;
     }
-
 }

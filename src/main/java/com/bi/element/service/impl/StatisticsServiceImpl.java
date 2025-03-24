@@ -1,4 +1,4 @@
-package com.bi.element.service.imlp;
+package com.bi.element.service.impl;
 
 import com.bi.element.service.StatisticsService;
 import org.springframework.stereotype.Service;

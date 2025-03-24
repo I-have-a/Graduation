@@ -1,8 +1,8 @@
 package com.bi.element.service;
 
 import com.bi.element.common.RedisConstant;
-import com.bi.element.mapper.UserMapper;
 import com.bi.element.domain.po.User;
+import com.bi.element.mapper.UserMapper;
 import com.bi.element.utils.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,7 @@
-package com.bi.element.service.imlp;
+package com.bi.element.service.impl;
 
 import com.bi.element.domain.po.Message;
-import com.bi.element.domain.status_enum.UserStatus;
+import com.bi.element.domain.statusEnum.UserStatus;
 import com.bi.element.mapper.MessageMapper;
 import com.bi.element.mapper.UserMapper;
 import com.bi.element.response.Code;

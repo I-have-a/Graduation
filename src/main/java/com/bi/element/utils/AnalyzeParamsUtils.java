@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -15,9 +14,9 @@ public class AnalyzeParamsUtils {
 
     // 解析参数，赋予实际的数据值
     public static Object[] analyzeParams(JoinPoint point, String params) {
-        if (params == null || params.length() == 0) return new Object[0];
+        if (params == null || params.isEmpty()) return new Object[0];
         List<Object> list = new ArrayList<>();
-        Arrays.stream(params.split("\\,")).filter(s -> s.length() > 0).forEach(s -> {
+        Arrays.stream(params.split(",")).filter(s -> !s.isEmpty()).forEach(s -> {
             try {
                 list.add(getParamValue(point, s));
             } catch (Exception e) {

@@ -6,16 +6,17 @@
 
     <resultMap id="BaseMap" type="com.bi.element.domain.po.User">
         <id property="id" column="id"/>
-        <result column="bothday" property="bothDay"/>
+        <result column="birth_day" property="birthDay"/>
         <result column="create_time" property="createTime"/>
         <result column="delete_flag" property="status"/>
         <result column="account" property="account"/>
         <result column="password" property="password"/>
-        <result column="nickname" property="nickname"/>
+        <result column="user_name" property="userName"/>
         <result column="email" property="email"/>
         <result column="phone" property="phone"/>
         <result column="photo" property="photo"/>
     </resultMap>
+
     <delete id="deleteUU">
         DELETE
         FROM u_u
@@ -32,14 +33,6 @@
         select *
         from tb_user
         where id = #{id}
-    </select>
-
-    <select id="getFriends" resultMap="BaseMap">
-        select b.id, b.nickname, b.photo
-        from tb_user AS a
-        INNER JOIN u_u ON a.id = u_u.user_id
-        INNER JOIN tb_user AS b ON u_u.friend_id = b.id
-        where a.id = #{id}
     </select>
 
     <select id="getSurvivalUserList" resultMap="BaseMap" parameterType="com.bi.element.domain.po.User">
@@ -71,7 +64,6 @@
                 phone =
                 #{phone}
             </if>
-            and delete_flag = 1
         </where>
     </select>
 
@@ -79,26 +71,11 @@
         INSERT INTO tb_user (account, password, create_time)
         VALUES (#{account}, #{password}, #{createTime});
     </insert>
-    <insert id="addUU">
-        insert into u_u (user_id, friend_id)
-        values (#{id}, #{fID});
-        insert into u_u (friend_id, user_id)
-        values (#{id}, #{fID});
-    </insert>
 
     <select id="getLoginUser" resultMap="BaseMap">
         select *
         from tb_user
         where account = #{account}
-    </select>
-    <select id="getUserByItem" resultType="com.bi.element.domain.po.User">
-        SELECT tb_user.id,
-        account,
-        photo
-        FROM u_e
-        INNER JOIN tb_user ON u_e.uid = tb_user.id
-        WHERE u_e.eid = #{id}
-        AND tb_user.delete_flag = 1
     </select>
     <select id="selectByUsername" resultMap="BaseMap">
         select *
@@ -106,11 +83,6 @@
         where account = #{username}
     </select>
 
-    <update id="updateFlag">
-        UPDATE tb_user
-        SET delete_flag = !delete_flag
-        WHERE id = #{id};
-    </update>
     <update id="updatePassword">
         UPDATE tb_user
         SET password = #{priorPassword}

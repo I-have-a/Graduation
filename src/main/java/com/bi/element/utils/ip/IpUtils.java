@@ -17,7 +17,7 @@ public class IpUtils {
     // 匹配 ip
     public final static String REGX_IP = "((" + REGX_0_255 + "\\.){3}" + REGX_0_255 + ")";
     // 匹配网段
-    public final static String REGX_IP_SEG = "(" + REGX_IP + "\\-" + REGX_IP + ")";
+    public final static String REGX_IP_SEG = "(" + REGX_IP + "-" + REGX_IP + ")";
     public final static String REGX_IP_WILDCARD = "(((\\*\\.){3}\\*)|(" + REGX_0_255 + "(\\.\\*){3})|(" + REGX_0_255 + "\\." + REGX_0_255 + ")(\\.\\*){2}" + "|((" + REGX_0_255 + "\\.){3}\\*))";
 
     /**
@@ -40,20 +40,20 @@ public class IpUtils {
             return "unknown";
         }
         String ip = request.getHeader("x-forwarded-for");
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("Proxy-Client-IP");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("X-Forwarded-For");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("WL-Proxy-Client-IP");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("X-Real-IP");
         }
 
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
         }
 
@@ -100,9 +100,8 @@ public class IpUtils {
                     return true;
                 }
             case SECTION_5:
-                switch (b1) {
-                    case SECTION_6:
-                        return true;
+                if (b1 == SECTION_6) {
+                    return true;
                 }
             default:
                 return false;
@@ -116,7 +115,7 @@ public class IpUtils {
      * @return byte 字节
      */
     public static byte[] textToNumericFormatV4(String text) {
-        if (text.length() == 0) {
+        if (text.isEmpty()) {
             return null;
         }
 
@@ -220,7 +219,7 @@ public class IpUtils {
         if (ip != null && ip.indexOf(",") > 0) {
             final String[] ips = ip.trim().split(",");
             for (String subIp : ips) {
-                if (false == isUnknown(subIp)) {
+                if (!isUnknown(subIp)) {
                     ip = subIp;
                     break;
                 }

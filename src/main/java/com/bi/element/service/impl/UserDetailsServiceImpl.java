@@ -1,4 +1,4 @@
-package com.bi.element.service.imlp;
+package com.bi.element.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.bi.element.domain.po.LoginUser;
@@ -24,6 +24,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (user == null) {
             throw new RuntimeException("用户不存在");
         }
-        return new LoginUser(user,user.getId());
+        return new LoginUser(user, user.getId());
     }
 }

@@ -17,9 +17,9 @@ public class Seq {
     // 机器标识
     private static final String machineCode = "A";
     // 通用接口序列数
-    private static AtomicInteger commSeq = new AtomicInteger(1);
+    private static final AtomicInteger commSeq = new AtomicInteger(1);
     // 上传接口序列数
-    private static AtomicInteger uploadSeq = new AtomicInteger(1);
+    private static final AtomicInteger uploadSeq = new AtomicInteger(1);
 
     /**
      * 获取通用序列号

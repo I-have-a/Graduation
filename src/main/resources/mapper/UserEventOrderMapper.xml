@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bi.element.mapper.UserEventOrderMapper">
+    <select id="selectMaxOrderNumByUser" resultType="java.lang.Integer">
+        SELECT
+        MAX(ueo.order_num)
+        FROM tb_user_event_order ueo
+        LEFT JOIN tb_item i ON i.id = ueo.item_id
+        LEFT JOIN tb_event_instances e ON ueo.event_id = e.id
+        <where>
+            <if test="userId != null">ueo.user_id = #{userId}</if>
+            <if test="parentId != null">and ueo.parent_id = #{parentId}</if>
+            <if test="eventDate != null">and (i.event_date = #{eventDate} or e.event_date = #{eventDate})</if>
+        </where>
+    </select>
+</mapper>

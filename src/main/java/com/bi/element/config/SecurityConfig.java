@@ -1,7 +1,8 @@
 package com.bi.element.config;
 
 import com.bi.element.filter.JwtAuthenticationTokenFilter;
-import com.bi.element.service.imlp.UserDetailsServiceImpl;
+import com.bi.element.handler.AuthenticationEntryPointImpl;
+import com.bi.element.service.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,6 +34,8 @@ public class SecurityConfig {
 
     @Autowired
     private LogoutSuccessHandlerImpl logoutSuccessHandler;
+    @Autowired
+    private AuthenticationEntryPointImpl unauthorizedHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -42,7 +45,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/user/login", "/register", "/home")
                         .permitAll()
-                        .requestMatchers(HttpMethod.GET, "/", "/*.html", "/**/*.html", "/**/*.css", "/**/*.js", "/profile/**")
+                        .requestMatchers(HttpMethod.GET, "/", "/*.html", "/**.html", "/**.css", "/**.js", "/profile/**")
                         .permitAll()
                         .anyRequest()
                         .authenticated())
@@ -55,16 +58,15 @@ public class SecurityConfig {
                         .permitAll()
                         .logoutSuccessHandler(logoutSuccessHandler)
                 )
-                .exceptionHandling(exception -> exception
-                        .accessDeniedPage("/403") // 权限不足时跳转的页面
-                ).addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
+                .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .httpBasic(withDefaults());
         return http.build();
     }
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("/css/**", "/js/**", "/images/**","/**.html");
+        return (web) -> web.ignoring().requestMatchers("/css/**", "/js/**", "/images/**", "/**.html");
     }
 
     @Bean

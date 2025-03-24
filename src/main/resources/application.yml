@@ -9,16 +9,18 @@ server:
       max: 800
       min-spare: 100
 mybatis-plus:
+  mapper-locations: classpath:mapper/*Mapper.xml
   global-config:
     db-config:
       table-prefix: tb_
       logic-delete-field: del_flag
       logic-delete-value: 1
       logic-not-delete-value: 0
-      update-strategy: not_null
+      id-type: assign_id
   configuration:
     default-enum-type-handler: com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler
     map-underscore-to-camel-case: true
+  type-aliases-package: com.bi.**.domain
 logging:
   level:
     com.bi: debug
@@ -28,9 +30,12 @@ token:
   header: Authorization
   # 令牌密钥
   secret: abcdefghijklmnopqrstuvwxyz
-  # 令牌有效期（默认30分钟）
-  expireTime: 43200
+  # 令牌有效期（默认30天）
+  expireTime: 259200
 spring:
+  messages:
+    # 国际化资源文件路径
+    basename: i18n/messages
   security:
     user:
       name: admin
@@ -58,7 +63,7 @@ spring:
       max-request-size: 20MB
   devtools:
     restart:
-      enabled: false
+      enabled: true
   data:
     redis:
       host: 192.168.30.100

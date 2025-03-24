@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bi.element.mapper.ItemMapper">
+    <resultMap id="baseMap" type="com.bi.element.domain.po.Item">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="item_describe" property="itemDescribe"/>
+        <result column="del_flag" property="delFlag"/>
+    </resultMap>
+    
+    <select id="selectRootItems" resultMap="baseMap">
+        SELECT ti.*, ueo.order_num
+        FROM tb_item ti
+                 LEFT JOIN tb_user_event_order ueo ON ti.id = ueo.item_id AND ueo.user_id = #{userId}
+        WHERE (ti.owner_id = #{userId} OR
+               EXISTS (SELECT 1 FROM tb_item_shares tis WHERE tis.item_id = ti.id AND tis.user_id = #{userId}))
+          AND ti.parent_id IS NULL
+        ORDER BY ueo.order_num
+    </select>
+</mapper>

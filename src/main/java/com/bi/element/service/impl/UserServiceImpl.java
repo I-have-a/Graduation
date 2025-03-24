@@ -1,4 +1,4 @@
-package com.bi.element.service.imlp;
+package com.bi.element.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -10,8 +10,6 @@ import com.bi.element.domain.vo.UserVO;
 import com.bi.element.exception.ServiceException;
 import com.bi.element.exception.user.UserPasswordNotMatchException;
 import com.bi.element.mapper.UserMapper;
-import com.bi.element.response.Code;
-import com.bi.element.response.R;
 import com.bi.element.service.TokenService;
 import com.bi.element.service.UserService;
 import com.bi.element.utils.DateUtils;
@@ -27,9 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,7 +42,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private final TokenService tokenService;
 
     @Override
-    public Map<String, Object> login(User user, HttpServletRequest request) {
+    public String login(UserVO user, HttpServletRequest request) {
         //AuthenticationManager authenticate进行用户认证
         Authentication authentication;
         try {
@@ -65,10 +61,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         recordLoginInfo(loginUser.getUserId());
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("token", tokenService.createToken(loginUser));
-        return map;
+        return tokenService.createToken(loginUser);
     }
 
     @Transactional
@@ -77,23 +70,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         User userPo = new User();
         BeanUtil.copyProperties(user, userPo);
         userPo.setPassword(passwordEncoder.encode(userPo.getPassword()));
-        int one = userMapper.insert(userPo);
-        return one != 0;
+        return userMapper.insert(userPo) != 0;
     }
 
     @Override
-    public boolean updateInfo(User user) {
-        return userMapper.updateById(user) == 1;
+    public Boolean updateInfo(UserVO user) {
+        User userPO = new User();
+        BeanUtil.copyProperties(user, userPO);
+        return userMapper.updateById(userPO) == 1;
     }
 
     @Override
-    public R weakBay(Long id) {
-        return userMapper.updateFlag(id) == 1 ? new R("注销成功", true, Code.SUCCESS) : new R("注销失败", false, Code.FAIL);
+    public Boolean logoff(Long id) {
+        return userMapper.updateFlag(id) == 1;
     }
 
     @Transactional
     @Override
-    public boolean updatePassword(String priorPassword, Long id) {
+    public Boolean updatePassword(String priorPassword, Long id) {
         Pattern p = Pattern.compile("^[A-Za-z\\d!@#$%^&*()_+]{6,20}$");
         Matcher matcher = p.matcher(priorPassword);
         if (!matcher.find()) {
@@ -106,7 +100,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public int deleteFriends(Long currentId, List<Integer> ids) {
+    public Integer deleteFriends(Long currentId, List<Integer> ids) {
         return userMapper.deleteUU(currentId, ids);
     }
 
@@ -125,16 +119,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return userMapper.selectList(wrapper);
     }
 
-    @Override
-    public Integer updateUserProfile(User user) {
-        return userMapper.updateById(user) != 0 ? 1 : 0;
-    }
-
     public void recordLoginInfo(Long userId) {
-        User user = new User();
+        UserVO user = new UserVO();
         user.setId(userId);
         user.setLoginIp(IpUtils.getIpAddr());
         user.setLoginDate(DateUtils.getNowDate());
-        updateUserProfile(user);
+        updateInfo(user);
     }
 }

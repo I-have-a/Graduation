@@ -3,12 +3,14 @@ package com.bi.element.domain.vo;
 import com.bi.element.domain.po.BaseBean;
 import com.bi.element.domain.po.RecurrenceRule;
 import com.bi.element.domain.po.User;
+import com.bi.element.domain.validation.Add;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.io.Serial;
+import java.util.Date;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -27,7 +29,7 @@ public class ItemVO extends BaseBean implements java.io.Serializable {
     /**
      * 事件名
      */
-    @NotBlank(message = "事件名不能为空")
+    @NotBlank(message = "事件名不能为空", groups = {Add.class})
     private String title;
 
     /**
@@ -44,6 +46,12 @@ public class ItemVO extends BaseBean implements java.io.Serializable {
      * 重复类型
      */
     private RecurrenceRule recurrenceType;
+
+    private Date eventDate;
+
+    private Date startDate;
+
+    private Date endDate;
 
     /**
      * 父事件id

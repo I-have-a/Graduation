@@ -3,11 +3,10 @@ package com.bi.element.domain.po;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.bi.element.domain.status_enum.UserStatus;
+import com.bi.element.domain.statusEnum.UserStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.experimental.Accessors;
 
 import java.io.Serial;
@@ -18,7 +17,7 @@ import java.util.List;
 @Data
 @TableName("tb_user")
 @Accessors(chain = true)
-public class User extends BaseBean implements java.io.Serializable{
+public class User extends BaseBean implements java.io.Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 

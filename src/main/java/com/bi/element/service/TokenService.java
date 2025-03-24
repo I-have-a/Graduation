@@ -34,7 +34,7 @@ public class TokenService {
     protected static final long MILLIS_SECOND = 1000;
     protected static final long MILLIS_MINUTE = 60 * MILLIS_SECOND;
     private static final Logger log = LoggerFactory.getLogger(TokenService.class);
-    private static final Long MILLIS_MINUTE_TEN = 20 * 60 * 1000L;
+    private static final Long MILLIS_MINUTE_TEN = 30 * 24 * 60 * 60 * 1000L;
     // 令牌自定义标识
     @Value("${token.header}")
     private String header;
@@ -61,8 +61,7 @@ public class TokenService {
                 // 解析对应的权限以及用户信息
                 String uuid = (String) claims.get(Constants.LOGIN_USER_KEY);
                 String userKey = getTokenKey(uuid);
-                LoginUser cacheObject = redisCache.getCacheObject(userKey);
-                return cacheObject;
+                return redisCache.getCacheObject(userKey);
             } catch (Exception e) {
                 log.error("获取用户信息异常'{}'", e.getMessage());
             }
@@ -107,8 +106,7 @@ public class TokenService {
     }
 
     /**
-     * 验证令牌有效期，相差不足20分钟，自动刷新缓存
-     *
+     * 验证令牌有效期，相差不足 30 天，自动刷新缓存
      */
     public void verifyToken(LoginUser loginUser) {
         long expireTime = loginUser.getExpireTime();

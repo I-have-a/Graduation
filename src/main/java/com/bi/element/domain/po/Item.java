@@ -1,16 +1,22 @@
 package com.bi.element.domain.po;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.Version;
+import com.bi.element.domain.statusEnum.ItemComplexity;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.io.Serial;
+import java.time.LocalDate;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Accessors(chain = true)
+@TableName("tb_item")
 public class Item extends BaseBean implements java.io.Serializable {
 
     @Serial
@@ -30,22 +36,39 @@ public class Item extends BaseBean implements java.io.Serializable {
     /**
      * 封面地址
      */
+    @TableField("cover_address")
     private String coverAddress;
 
     /**
      * 是否重复
      */
+    @TableField("is_recurring")
     private Boolean isRecurring;
 
     /**
      * 重复类型
      */
+    @TableField(exist = false)
     private RecurrenceRule recurrenceType;
+
+    @TableField("recurrence_rule_id")
+    private Long recurrenceRuleId;
 
     /**
      * 父事件id
      */
+    @TableField("parent_id")
     private Long parentId;
+
+    private LocalDate startDate;
+
+    private LocalDate endDate;
+
+    private LocalDate eventDate;
+
+    private Integer year;
+    private Integer month;
+    private Integer day;
 
     /**
      * 深度
@@ -60,40 +83,39 @@ public class Item extends BaseBean implements java.io.Serializable {
     /**
      * 创建者Id
      */
+    @TableField("owner_id")
     private Long ownerId;
-
-    /**
-     * 显示顺序
-     */
-    private Integer orderNum;
 
     /**
      * 描述
      */
-    private String describe;
+    @TableField("item_describe")
+    private String itemDescribe;
 
     /**
      * 删除标志位
      */
+    @TableField("del_flag")
     private Boolean delFlag;
-
-    /**
-     * 完成状态
-     */
-    private Boolean isComplete;
 
     /**
      * 难度
      */
-    private Integer complexity;
+    @TableField("complexity")
+    private ItemComplexity complexity;
+
+    @Version
+    private Integer version;
 
     /**
      * 子事件
      */
+    @TableField(exist = false)
     private List<Item> subItems;
 
     /**
      * 用户
      */
+    @TableField(exist = false)
     private List<User> users;
 }

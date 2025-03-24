@@ -1,7 +1,6 @@
 package com.bi.element.response;
 
 import lombok.Data;
-import org.apache.coyote.Response;
 
 @Data
 public class R {
